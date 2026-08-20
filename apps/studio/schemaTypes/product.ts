@@ -27,6 +27,11 @@ export const product = defineType({
             name: 'active',
             title: 'Active',
             type: 'boolean'
+        }),
+        defineField({
+            name: 'store',
+            title: 'Store',
+            type: 'store'
         })
     ],
 })
