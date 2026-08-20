@@ -32,6 +32,26 @@ export const product = defineType({
             name: 'store',
             title: 'Store',
             type: 'store'
+        }),
+        defineField({
+            name: 'tags',
+            title: 'Tags',
+            type: 'array',
+            of: [
+                {
+                    type: 'string'
+                }
+            ]
+        }),
+        defineField({
+            name: 'images',
+            title: 'Images',
+            type: 'array',
+            of: [
+                {
+                    type: 'image'
+                }
+            ]
         })
     ],
 })
