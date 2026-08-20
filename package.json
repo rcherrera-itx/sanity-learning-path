@@ -4,5 +4,8 @@
   "private": true,
   "workspaces": [
     "apps/*"
-  ]
+  ],
+  "scripts": {
+    "dev:studio": "npm run dev --workspace=@sanity-commerce-study/studio"
+  }
 }
