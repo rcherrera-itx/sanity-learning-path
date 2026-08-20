@@ -1,0 +1,31 @@
+# Dependencies
+node_modules/
+.pnp
+.pnp.js
+
+# Build output
+dist/
+
+# Sanity
+.sanity/
+
+# Logs
+logs/
+*.log
+
+# Coverage directory used by testing tools
+coverage/
+
+# Misc
+.DS_Store
+
+# Typescript
+*.tsbuildinfo
+
+# Dotenv and similar local-only files
+*.local
+
+# Environment
+.env
+.env.*
+!.env.example
