@@ -17,6 +17,16 @@ export const product = defineType({
             options: {
                 source: 'title'
             }
+        }),
+        defineField({
+            name: 'excerpt',
+            title: 'Excerpt',
+            type: 'text'
+        }),
+        defineField({
+            name: 'active',
+            title: 'Active',
+            type: 'boolean'
         })
     ],
 })
