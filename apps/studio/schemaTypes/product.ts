@@ -8,7 +8,8 @@ export const product = defineType({
         defineField({
             name: 'title',
             title: 'Title',
-            type: 'string'
+            type: 'string',
+            validation: (rule) => rule.required()
         }),
         defineField({
             name: 'slug',
@@ -16,12 +17,14 @@ export const product = defineType({
             type: 'slug',
             options: {
                 source: 'title'
-            }
+            },
+            validation: (rule) => rule.required()
         }),
         defineField({
             name: 'excerpt',
             title: 'Excerpt',
-            type: 'text'
+            type: 'text',
+            validation: (rule) => rule.max(200)
         }),
         defineField({
             name: 'active',
