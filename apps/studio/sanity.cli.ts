@@ -11,5 +11,10 @@ export default defineCliConfig({
      * Learn more at https://www.sanity.io/docs/cli#auto-updates
      */
     autoUpdates: true,
+  },
+  typegen: {
+    path: './queries/**/*.{ts,tsx}',
+    schema: './schema.json',
+    generates: './sanity.types.ts'
   }
 })

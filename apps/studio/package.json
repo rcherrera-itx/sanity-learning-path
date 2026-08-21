@@ -16,6 +16,7 @@
   ],
   "dependencies": {
     "@sanity/vision": "4.22.0",
+    "groq": "4.22.0",
     "react": "^19.1",
     "react-dom": "^19.1",
     "sanity": "4.22.0",
