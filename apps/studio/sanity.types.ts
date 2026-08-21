@@ -240,3 +240,118 @@ export type AllSanitySchemaTypes =
   | SanityImageAsset
   | Geopoint
 export declare const internalGroqTypeReferenceTo: unique symbol
+// Source: ./queries/page.ts
+// Variable: pageBySlugQuery
+// Query: *[        _type == 'page'        &&        slug.current == $slug    ]    | order(_updatedAt)    [0]     {        _id,        title,        "slug": slug.current,        content,        featuredProducts[]->{            _id,            title,            "slug": slug.current,            excerpt,            images[]        }    }
+export type PageBySlugQueryResult = {
+  _id: string
+  title: string
+  slug: string
+  content: Array<{
+    children?: Array<{
+      marks?: Array<string>
+      text?: string
+      _type: 'span'
+      _key: string
+    }>
+    style?: 'blockquote' | 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6' | 'normal'
+    listItem?: 'bullet' | 'number'
+    markDefs?: Array<{
+      href?: string
+      _type: 'link'
+      _key: string
+    }>
+    level?: number
+    _type: 'block'
+    _key: string
+  }> | null
+  featuredProducts: Array<{
+    _id: string
+    title: string
+    slug: string
+    excerpt: string | null
+    images: Array<{
+      asset?: {
+        _ref: string
+        _type: 'reference'
+        _weak?: boolean
+        [internalGroqTypeReferenceTo]?: 'sanity.imageAsset'
+      }
+      media?: unknown
+      hotspot?: SanityImageHotspot
+      crop?: SanityImageCrop
+      _type: 'image'
+      _key: string
+    }> | null
+  }> | null
+} | null
+
+// Source: ./queries/product.ts
+// Variable: productBySlugQuery
+// Query: *[        _type == 'product'        &&        slug.current == $slug    ]    | order(_updatedAt)    [0]     {        _id,        title,        "slug": slug.current,        excerpt,        content,        images,        store,        relatedProducts[]->{            _id,            title,            "slug": slug.current,            excerpt,            images        }    }
+export type ProductBySlugQueryResult = {
+  _id: string
+  title: string
+  slug: string
+  excerpt: string | null
+  content: Array<{
+    children?: Array<{
+      marks?: Array<string>
+      text?: string
+      _type: 'span'
+      _key: string
+    }>
+    style?: 'blockquote' | 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6' | 'normal'
+    listItem?: 'bullet' | 'number'
+    markDefs?: Array<{
+      href?: string
+      _type: 'link'
+      _key: string
+    }>
+    level?: number
+    _type: 'block'
+    _key: string
+  }> | null
+  images: Array<{
+    asset?: {
+      _ref: string
+      _type: 'reference'
+      _weak?: boolean
+      [internalGroqTypeReferenceTo]?: 'sanity.imageAsset'
+    }
+    media?: unknown
+    hotspot?: SanityImageHotspot
+    crop?: SanityImageCrop
+    _type: 'image'
+    _key: string
+  }> | null
+  store: Store | null
+  relatedProducts: Array<{
+    _id: string
+    title: string
+    slug: string
+    excerpt: string | null
+    images: Array<{
+      asset?: {
+        _ref: string
+        _type: 'reference'
+        _weak?: boolean
+        [internalGroqTypeReferenceTo]?: 'sanity.imageAsset'
+      }
+      media?: unknown
+      hotspot?: SanityImageHotspot
+      crop?: SanityImageCrop
+      _type: 'image'
+      _key: string
+    }> | null
+  }> | null
+} | null
+
+// Query TypeMap
+import '@sanity/client'
+declare module '@sanity/client' {
+  interface SanityQueries {
+    '\n    *[\n        _type == \'page\'\n        &&\n        slug.current == $slug\n    ]\n    | order(_updatedAt)\n    [0] \n    {\n        _id,\n        title,\n        "slug": slug.current,\n        content,\n\n        featuredProducts[]->{\n            _id,\n            title,\n            "slug": slug.current,\n            excerpt,\n            images[]\n        }\n    }\n    ': PageBySlugQueryResult
+    '\n    *[\n        _type == \'product\'\n        &&\n        slug.current == $slug\n    ]\n    | order(_updatedAt)\n    [0] \n    {\n        _id,\n        title,\n        "slug": slug.current,\n        excerpt,\n        content,\n        images,\n        store,\n\n        relatedProducts[]->{\n            _id,\n            title,\n            "slug": slug.current,\n            excerpt,\n            images\n        }\n    }\n    ': ProductBySlugQueryResult
+  }
+}
