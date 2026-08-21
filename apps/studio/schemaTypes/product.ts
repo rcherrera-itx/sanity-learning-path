@@ -27,25 +27,14 @@ export const product = defineType({
             validation: (rule) => rule.max(200)
         }),
         defineField({
-            name: 'active',
-            title: 'Active',
-            type: 'boolean'
-        }),
-        defineField({
-            name: 'store',
-            title: 'Store',
-            type: 'store'
-        }),
-        defineField({
-            name: 'tags',
-            title: 'Tags',
+            name: 'content',
+            title: 'Content',
             type: 'array',
-            of: [
-                {
-                    type: 'string'
-                }
-            ]
+            of: [{
+                type: 'block'
+            }]
         }),
+        
         defineField({
             name: 'images',
             title: 'Images',
@@ -68,12 +57,24 @@ export const product = defineType({
             }]
         }),
         defineField({
-            name: 'content',
-            title: 'Content',
-            type: 'array',
-            of: [{
-                type: 'block'
-            }]
-        })
+            name: 'store',
+            title: 'Store',
+            type: 'store'
+        }),
+        // defineField({
+        //     name: 'active',
+        //     title: 'Active',
+        //     type: 'boolean'
+        // }),
+        // defineField({
+        //     name: 'tags',
+        //     title: 'Tags',
+        //     type: 'array',
+        //     of: [
+        //         {
+        //             type: 'string'
+        //         }
+        //     ]
+        // }),
     ],
 })
