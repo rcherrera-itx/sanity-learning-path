@@ -52,6 +52,17 @@ export const product = defineType({
                     type: 'image'
                 }
             ]
+        }),
+        defineField({
+            name: 'relatedProducts',
+            title: 'Related Products',
+            type: 'array',
+            of: [{
+                type: 'reference',
+                to: [{
+                    type: 'product'
+                }]
+            }]
         })
     ],
 })
