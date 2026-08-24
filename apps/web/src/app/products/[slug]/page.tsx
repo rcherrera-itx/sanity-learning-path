@@ -1,9 +1,11 @@
 import { notFound } from "next/navigation";
+import Link from "next/link";
+import { PortableText } from "next-sanity";
+import Image from 'next/image';
 
 import { client } from "@/sanity/lib/client";
 import { productBySlugQuery } from "@/sanity/lib/queries";
-import Link from "next/link";
-import { PortableText } from "next-sanity";
+import { urlFor } from '@/sanity/lib/image';
 
 type ProductPageProps = {
     params: Promise<{
@@ -13,18 +15,15 @@ type ProductPageProps = {
 
 export default async function ProductPage({ params }: ProductPageProps) {
     const { slug } = await params;
-
-    console.log(slug);
-
     const product = await client.fetch(productBySlugQuery, {
         slug,
     });
 
-    console.log(product);
-
     if (!product) {
         notFound();
     }
+
+    const primaryImage = product.images?.[0];
 
     return (
         <main>
@@ -37,6 +36,16 @@ export default async function ProductPage({ params }: ProductPageProps) {
                         <PortableText value={product.content} />
                     </section>
                 ) : null}
+
+                {primaryImage?.asset ? (
+                    <Image 
+                    src={urlFor(primaryImage).width(1200).height(800).fit('crop').auto('format').url()}
+                    alt="{product.title}"
+                    width={1200}
+                    height={800}
+                    sizes="(max-width: 768px) 100vw 1200px"
+                     />
+                ): null}
 
                 {product.relatedProducts?.length ? (
                     <section>
