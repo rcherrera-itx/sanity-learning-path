@@ -34,7 +34,6 @@ export const product = defineType({
                 type: 'block'
             }]
         }),
-        
         defineField({
             name: 'images',
             title: 'Images',
