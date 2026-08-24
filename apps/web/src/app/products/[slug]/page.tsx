@@ -1,6 +1,6 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
-import { PortableText } from "next-sanity";
+import { PortableText, stegaClean } from "next-sanity";
 import Image from 'next/image';
 
 // import { client } from "@/sanity/lib/client";
@@ -66,7 +66,7 @@ export default async function ProductPage({ params }: ProductPageProps) {
 
                                 return (
                                     <li key={relatedProduct._id}>
-                                        <Link href={`/products/${relatedProduct.slug}`}>
+                                        <Link href={`/products/${stegaClean(relatedProduct.slug)}`}>
                                             {relatedProduct.title}
                                         </Link>
                                     </li>
