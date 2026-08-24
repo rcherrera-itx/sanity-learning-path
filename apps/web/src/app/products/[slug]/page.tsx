@@ -3,9 +3,10 @@ import Link from "next/link";
 import { PortableText } from "next-sanity";
 import Image from 'next/image';
 
-import { client } from "@/sanity/lib/client";
+// import { client } from "@/sanity/lib/client";
 import { productBySlugQuery } from "@/sanity/lib/queries";
 import { urlFor } from '@/sanity/lib/image';
+import { sanityFetch } from "@/sanity/lib/live";
 
 type ProductPageProps = {
     params: Promise<{
@@ -15,9 +16,14 @@ type ProductPageProps = {
 
 export default async function ProductPage({ params }: ProductPageProps) {
     const { slug } = await params;
-    const product = await client.fetch(productBySlugQuery, {
-        slug,
-    });
+    // const product = await client.fetch(productBySlugQuery, {
+    //     slug,
+    // });
+
+    const { data: product } = await sanityFetch({
+        query: productBySlugQuery,
+        params: { slug }
+    })
 
     if (!product) {
         notFound();
@@ -38,14 +44,14 @@ export default async function ProductPage({ params }: ProductPageProps) {
                 ) : null}
 
                 {primaryImage?.asset ? (
-                    <Image 
-                    src={urlFor(primaryImage).width(1200).height(800).fit('crop').auto('format').url()}
-                    alt="{product.title}"
-                    width={1200}
-                    height={800}
-                    sizes="(max-width: 768px) 100vw 1200px"
-                     />
-                ): null}
+                    <Image
+                        src={urlFor(primaryImage).width(1200).height(800).fit('crop').auto('format').url()}
+                        alt="{product.title}"
+                        width={1200}
+                        height={800}
+                        sizes="(max-width: 768px) 100vw 1200px"
+                    />
+                ) : null}
 
                 {product.relatedProducts?.length ? (
                     <section>
