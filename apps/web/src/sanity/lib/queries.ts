@@ -46,7 +46,7 @@ export const pageBySlugQuery = defineQuery(`
             title,
             "slug": slug.current,
             excerpt,
-            images[]
+            "image": images[0]
         }
     }
 `);

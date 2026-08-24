@@ -305,7 +305,7 @@ export type ProductBySlugQueryResult = {
 
 // Source: src/sanity/lib/queries.ts
 // Variable: pageBySlugQuery
-// Query: *[        _type == 'page'        &&        slug.current == $slug    ]    | order(_updatedAt)    [0]     {        _id,        title,        "slug": slug.current,        content,        featuredProducts[]->{            _id,            title,            "slug": slug.current,            excerpt,            images[]        }    }
+// Query: *[        _type == 'page'        &&        slug.current == $slug    ]    | order(_updatedAt)    [0]     {        _id,        title,        "slug": slug.current,        content,        featuredProducts[]->{            _id,            title,            "slug": slug.current,            excerpt,            "image": images[0]        }    }
 export type PageBySlugQueryResult = {
   _id: string;
   title: string;
@@ -333,7 +333,7 @@ export type PageBySlugQueryResult = {
     title: string;
     slug: string;
     excerpt: string | null;
-    images: Array<{
+    image: {
       asset?: {
         _ref: string;
         _type: "reference";
@@ -345,7 +345,7 @@ export type PageBySlugQueryResult = {
       crop?: SanityImageCrop;
       _type: "image";
       _key: string;
-    }> | null;
+    } | null;
   }> | null;
 } | null;
 
@@ -354,6 +354,6 @@ import "@sanity/client";
 declare module "@sanity/client" {
   interface SanityQueries {
     '\n    *[\n        _type == \'product\'\n        &&\n        slug.current == $slug\n    ]\n    | order(_updatedAt)\n    [0] \n    {\n        _id,\n        title,\n        "slug": slug.current,\n        excerpt,\n        content,\n        images,\n        store,\n\n        relatedProducts[]->{\n            _id,\n            title,\n            "slug": slug.current,\n            excerpt,\n            images\n        }\n    }\n': ProductBySlugQueryResult;
-    '\n    *[\n        _type == \'page\'\n        &&\n        slug.current == $slug\n    ]\n    | order(_updatedAt)\n    [0] \n    {\n        _id,\n        title,\n        "slug": slug.current,\n        content,\n\n        featuredProducts[]->{\n            _id,\n            title,\n            "slug": slug.current,\n            excerpt,\n            images[]\n        }\n    }\n': PageBySlugQueryResult;
+    '\n    *[\n        _type == \'page\'\n        &&\n        slug.current == $slug\n    ]\n    | order(_updatedAt)\n    [0] \n    {\n        _id,\n        title,\n        "slug": slug.current,\n        content,\n\n        featuredProducts[]->{\n            _id,\n            title,\n            "slug": slug.current,\n            excerpt,\n            "image": images[0]\n        }\n    }\n': PageBySlugQueryResult;
   }
 }
