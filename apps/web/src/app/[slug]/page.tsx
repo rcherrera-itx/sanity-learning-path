@@ -1,11 +1,11 @@
 import Link from "next/link";
 import Image from 'next/image';
 import { notFound } from "next/navigation";
-import { PortableText } from "next-sanity";
 
-import { client } from "@/sanity/lib/client";
+// import { client } from "@/sanity/lib/client";
 import { urlFor } from '@/sanity/lib/image';
 import { pageBySlugQuery } from "@/sanity/lib/queries";
+import { sanityFetch } from "@/sanity/lib/live";
 
 type ContentPageProps = {
     params: Promise<{
@@ -16,9 +16,14 @@ type ContentPageProps = {
 export default async function ContentPage({ params }: ContentPageProps) {
     const { slug } = await params;
 
-    const page = await client.fetch(pageBySlugQuery, {
-        slug,
-    });
+    // const page = await client.fetch(pageBySlugQuery, {
+    //     slug,
+    // });
+
+    const { data: page } = await sanityFetch({
+        query: pageBySlugQuery,
+        params: { slug }
+    })
 
     if (!page) {
         notFound();
