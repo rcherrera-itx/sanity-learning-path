@@ -10,7 +10,7 @@ export default defineCliConfig({
      * Enable auto-updates for studios.
      * Learn more at https://www.sanity.io/docs/cli#auto-updates
      */
-    autoUpdates: true,
+    autoUpdates: false,
   },
   typegen: {
     path: './queries/**/*.{ts,tsx}',
