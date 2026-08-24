@@ -1,16 +1,28 @@
-import {defineConfig} from 'sanity'
-import {structureTool} from 'sanity/structure'
-import {visionTool} from '@sanity/vision'
-import {schemaTypes} from './schemaTypes'
+import { defineConfig } from 'sanity'
+import { structureTool } from 'sanity/structure'
+import { visionTool } from '@sanity/vision'
+import { schemaTypes } from './schemaTypes'
+import { presentationTool } from 'sanity/presentation';
 
 export default defineConfig({
   name: 'default',
-  title: 'sanity',
+  title: 'Sanity Commerce Studio',
 
   projectId: 'i1f2viuj',
   dataset: 'production',
 
-  plugins: [structureTool(), visionTool()],
+  plugins: [
+    structureTool(), 
+    visionTool(),
+    presentationTool({
+      previewUrl: {
+        origin: 'http://localhost:3000',
+        previewMode: {
+          enable: '/api/draft-mode/enable'
+        }
+      }
+    })
+  ],
 
   schema: {
     types: schemaTypes,
