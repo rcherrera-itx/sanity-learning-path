@@ -21,3 +21,6 @@ export const projectId = required(
     process.env.NEXT_PUBLIC_SANITY_PROJECT,
     'NEXT_PUBLIC_SANITY_PROJECT'
 )
+
+export const studioUrl = process.env.NEXT_PUBLIC_SANITY_STUDIO_URL || 'http://localhost:3333';
+
