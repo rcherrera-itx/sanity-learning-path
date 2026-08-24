@@ -50,6 +50,7 @@ export default async function ProductPage({ params }: ProductPageProps) {
                         width={1200}
                         height={800}
                         sizes="(max-width: 768px) 100vw 1200px"
+                        loading="eager"
                     />
                 ) : null}
 

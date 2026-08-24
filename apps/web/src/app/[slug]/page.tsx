@@ -53,6 +53,7 @@ export default async function ContentPage({ params }: ContentPageProps) {
                                                 width={600}
                                                 height={400}
                                                 sizes="(max-width: 768px) 100vw 600 px"
+                                                loading="eager"
                                             />
                                         ) : null}
 
