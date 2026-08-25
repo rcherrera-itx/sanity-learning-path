@@ -6,7 +6,7 @@ import Link from 'next/link';
 export function DisableDraftMode() {
     const isPresentationTool = useIsPresentationTool();
 
-    if(!isPresentationTool) {
+    if(isPresentationTool !== false) {
         return null;
     }
 
