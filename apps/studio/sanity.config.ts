@@ -5,6 +5,8 @@ import { schemaTypes } from './schemaTypes'
 import { presentationTool } from 'sanity/presentation';
 import { resolve } from './src/presentation/resolve';
 
+const previewOrigin = process.env.SANITY_STUDIO_PREVIEW_URL ?? 'http://localhost:3000';
+
 export default defineConfig({
   name: 'default',
   title: 'Sanity Commerce Studio',
@@ -18,7 +20,7 @@ export default defineConfig({
     presentationTool({
       resolve,
       previewUrl: {
-        origin: 'http://localhost:3000',
+        origin: previewOrigin,
         previewMode: {
           enable: '/api/draft-mode/enable'
         }
