@@ -16,7 +16,7 @@ export const store = defineType({
             type: 'string'
         }),
         defineField({
-            name: 'Status',
+            name: 'status',
             title: 'Status',
             type: 'string'
         }),

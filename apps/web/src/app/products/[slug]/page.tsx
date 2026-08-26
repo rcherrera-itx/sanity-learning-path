@@ -46,7 +46,7 @@ export default async function ProductPage({ params }: ProductPageProps) {
                 {primaryImage?.asset ? (
                     <Image
                         src={urlFor(primaryImage).width(1200).height(800).fit('crop').auto('format').url()}
-                        alt="{product.title}"
+                        alt={product.title}
                         width={1200}
                         height={800}
                         sizes="(max-width: 768px) 100vw 1200px"

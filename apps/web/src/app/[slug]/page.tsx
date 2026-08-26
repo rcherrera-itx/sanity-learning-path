@@ -52,7 +52,7 @@ export default async function ContentPage({ params }: ContentPageProps) {
                                                 alt={product.title}
                                                 width={600}
                                                 height={400}
-                                                sizes="(max-width: 768px) 100vw 600 px"
+                                                sizes="(max-width: 768px) 100vw 600px"
                                                 loading="eager"
                                             />
                                         ) : null}

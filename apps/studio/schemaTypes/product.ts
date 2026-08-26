@@ -13,7 +13,7 @@ export const product = defineType({
         }),
         defineField({
             name: 'slug',
-            title: 'slug',
+            title: 'Slug',
             type: 'slug',
             options: {
                 source: 'title'
