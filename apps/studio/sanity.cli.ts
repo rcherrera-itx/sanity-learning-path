@@ -1,4 +1,4 @@
-import {defineCliConfig} from 'sanity/cli'
+import { defineCliConfig } from 'sanity/cli'
 
 export default defineCliConfig({
   api: {
@@ -11,6 +11,7 @@ export default defineCliConfig({
      * Learn more at https://www.sanity.io/docs/cli#auto-updates
      */
     autoUpdates: false,
+    appId: 'ch13yif64akhap6i3jgcokhb',
   },
   typegen: {
     path: './queries/**/*.{ts,tsx}',
