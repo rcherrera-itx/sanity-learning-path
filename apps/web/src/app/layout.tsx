@@ -31,7 +31,7 @@ export default async function RootLayout({ children }: LayoutProps<"/">) {
     >
       <body className="min-h-full flex flex-col">
         {children}
-        <SanityLive />
+        <SanityLive includeDrafts={isEnabled} />
         {isEnabled &&
           <>
             <VisualEditing />
