@@ -50,3 +50,13 @@ export const pageBySlugQuery = defineQuery(`
         }
     }
 `);
+
+export const productSlugsQuery = defineQuery(`
+    *[
+        _type == "product"
+        &&
+        defined(slug.current)
+    ]{
+        "slug": slug.current    
+    }
+`);
