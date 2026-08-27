@@ -1,3 +1,5 @@
+import { cookies, draftMode } from 'next/headers';
+import { QueryParams } from 'sanity';
 import {
     defineLive,
     resolvePerspectiveFromCookies,
@@ -5,8 +7,6 @@ import {
 } from 'next-sanity/live'
 
 import { client } from './client'
-import { cookies, draftMode } from 'next/headers';
-import { QueryParams } from 'sanity';
 
 const token = process.env.SANITY_API_READ_TOKEN;
 
@@ -26,12 +26,12 @@ export const {
     strict: true
 });
 
-export interface DynamicFethcOptions {
+export interface DynamicFetchOptions {
     perspective: LivePerspective,
     stega: boolean
 }
 
-export async function getDynamicFetchOptions(): Promise<DynamicFethcOptions> {
+export async function getDynamicFetchOptions(): Promise<DynamicFetchOptions> {
     const { isEnabled: isDraftMode } = await draftMode();
 
     if (!isDraftMode) {
