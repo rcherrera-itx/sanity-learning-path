@@ -2,11 +2,24 @@ import { notFound } from "next/navigation";
 import Link from "next/link";
 import { PortableText, stegaClean } from "next-sanity";
 import Image from 'next/image';
+import { draftMode } from "next/headers";
+import { Suspense } from "react";
 
-// import { client } from "@/sanity/lib/client";
-import { productBySlugQuery } from "@/sanity/lib/queries";
+import { productBySlugQuery, productSlugsQuery } from "@/sanity/lib/queries";
 import { urlFor } from '@/sanity/lib/image';
-import { sanityFetch } from "@/sanity/lib/live";
+import {
+    getDynamicFetchOptions,
+    sanityFetch,
+    sanityFetchStaticParams,
+    type DynamicFetchOptions
+} from "@/sanity/lib/live";
+
+export async function generateStatucParams() {
+    const { data } = await sanityFetchStaticParams({
+        query: productSlugsQuery,
+    });
+    return { data };
+}
 
 type ProductPageProps = {
     params: Promise<{
@@ -14,16 +27,30 @@ type ProductPageProps = {
     }>
 }
 
-export default async function ProductPage({ params }: ProductPageProps) {
-    const { slug } = await params;
-    // const product = await client.fetch(productBySlugQuery, {
-    //     slug,
-    // });
+type CachedProductPageProps =
+    Awaited<ProductPageProps["params"]> &
+    DynamicFetchOptions;
+
+    export async function generateStaticParams() {
+        const { data } = await sanityFetchStaticParams({
+            query: productSlugsQuery
+        })
+    }
+
+async function CachedProductPage({
+    slug,
+    perspective,
+    stega
+}: CachedProductPageProps) {
+
+    "use cache";
 
     const { data: product } = await sanityFetch({
         query: productBySlugQuery,
-        params: { slug }
-    })
+        params: { slug },
+        perspective,
+        stega
+    });
 
     if (!product) {
         notFound();
@@ -77,5 +104,39 @@ export default async function ProductPage({ params }: ProductPageProps) {
                 ) : null}
             </article>
         </main>
+    );
+}
+
+async function DynamicProductPage({
+    params,
+}: ProductPageProps) {
+    const [
+        { slug },
+        { perspective, stega }
+    ] = await Promise.all([
+        params,
+        getDynamicFetchOptions()
+    ]);
+
+    return (
+        <CachedProductPage slug={slug} perspective="published" stega={false} />
+    );
+}
+
+export default async function ProductPage({ params }: ProductPageProps) {
+    const { isEnabled: isDraftMode } = await draftMode();
+
+    if (isDraftMode) {
+        return (
+            <Suspense fallback={<main><p>Loading product...</p></main>}>
+                <DynamicProductPage params={params} />
+            </Suspense>
+        );
+    }
+
+    const { slug } = await params;
+
+    return (
+        <CachedProductPage slug={slug} perspective="published" stega={false} />
     );
 }
