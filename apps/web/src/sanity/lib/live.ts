@@ -1,5 +1,5 @@
 import { cookies, draftMode } from 'next/headers';
-import { QueryParams } from 'sanity';
+import { QueryParams } from 'next-sanity';
 import {
     defineLive,
     resolvePerspectiveFromCookies,
