@@ -1,11 +1,12 @@
 import Link from "next/link";
 import Image from 'next/image';
 import { notFound } from "next/navigation";
+import { draftMode } from "next/headers";
+import { Suspense } from "react";
 
-// import { client } from "@/sanity/lib/client";
 import { urlFor } from '@/sanity/lib/image';
-import { pageBySlugQuery } from "@/sanity/lib/queries";
-import { sanityFetch } from "@/sanity/lib/live";
+import { pageBySlugQuery, productSlugsQuery } from "@/sanity/lib/queries";
+import { getDynamicFetchOptions, sanityFetch, sanityFetchStaticParams, type DynamicFetchOptions } from "@/sanity/lib/live";
 
 type ContentPageProps = {
     params: Promise<{
@@ -13,17 +14,32 @@ type ContentPageProps = {
     }>
 }
 
-export default async function ContentPage({ params }: ContentPageProps) {
-    const { slug } = await params;
+type CachedContentPageProps =
+    Awaited<ContentPageProps["params"]> &
+    DynamicFetchOptions;
 
-    // const page = await client.fetch(pageBySlugQuery, {
-    //     slug,
-    // });
+export async function generateStaticParams() {
+    const { data } = await sanityFetchStaticParams({
+        query: productSlugsQuery,
+        params: {
+            type: 'page'
+        }
+    });
+
+    return data;
+}
+
+async function CachedContentPage({
+    slug, perspective, stega
+}: CachedContentPageProps) {
+    "use cache";
 
     const { data: page } = await sanityFetch({
         query: pageBySlugQuery,
-        params: { slug }
-    })
+        params: { slug },
+        perspective,
+        stega
+    });
 
     if (!page) {
         notFound();
@@ -72,5 +88,39 @@ export default async function ContentPage({ params }: ContentPageProps) {
                 ) : null}
             </article>
         </main>
+    );
+}
+
+async function DynamicContentPage({
+    params
+}: ContentPageProps) {
+    const [
+        { slug },
+        dynamicFetchOptions
+    ] = await Promise.all([
+        params,
+        getDynamicFetchOptions()
+    ]);
+
+    return (
+        <CachedContentPage slug={slug} {...dynamicFetchOptions} />
+    );
+}
+
+export default async function ContentPage({ params }: ContentPageProps) {
+    const { isEnabled: isDraftMode } = await draftMode()
+
+    if (isDraftMode) {
+        return (
+            <Suspense fallback={<main>Loading page...</main>}>
+                <DynamicContentPage params={params} />
+            </Suspense>
+        );
+    }
+
+    const { slug } = await params;
+
+    return (
+        <CachedContentPage slug={slug} perspective="published" stega={false} />
     );
 }
