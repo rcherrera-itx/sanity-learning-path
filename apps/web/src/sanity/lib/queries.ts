@@ -60,3 +60,13 @@ export const productSlugsQuery = defineQuery(`
         "slug": slug.current    
     }
 `);
+
+export const pageSlugsQuery = defineQuery(`
+    *[
+        _type == "page"
+        &&
+        defined(slug.current)
+    ]{
+        "slug": slug.current    
+    }
+`);
