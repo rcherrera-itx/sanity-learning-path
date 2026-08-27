@@ -9,7 +9,7 @@ import {
 
 type SanityWebhookPayload = {
     _id?: string;
-    type?: string;
+    _type?: string;
 }
 
 export async function POST(request: NextRequest) {
@@ -36,35 +36,35 @@ export async function POST(request: NextRequest) {
             );
         }
 
-        if (!body?.type || !isSanityDocumentType(body.type)) {
+        if (!body?._type || !isSanityDocumentType(body._type)) {
 
             const receivedKeys = body ? Object.keys(body) : [];
 
             console.warn('[WEBHOOK][UNSUPPORTED-DOCUMENT-TYPES]', {
                 documentId: body?._id,
-                documentType: body?.type,
+                documentType: body?._type,
                 receivedKeys
             });
 
             return NextResponse.json(
-                { message: 'Unsopported Sanity document type.', documentId: body?._id ?? null, documentType: body?.type ?? null, receivedKeys, supportedDocumentTypes: Object.keys(SANITY_WEBHOOK_CACHE_TAGS)},
+                { message: 'Unsopported Sanity document type.', documentId: body?._id ?? null, documentType: body?._type ?? null, receivedKeys, supportedDocumentTypes: Object.keys(SANITY_WEBHOOK_CACHE_TAGS)},
                 { status: 400 }
             )
         }
 
-        const tag = SANITY_WEBHOOK_CACHE_TAGS[body.type];
+        const tag = SANITY_WEBHOOK_CACHE_TAGS[body._type];
 
         revalidateTag(tag, { expire: 0 });
 
         console.log('[WEBHOOK][REVALIDATE-TAG]', {
             documentId: body._id,
-            documentType: body.type
+            documentType: body._type
         });
 
         return NextResponse.json({
             revalidated: true,
             documentId: body._id,
-            documentType: body.type,
+            documentType: body._type,
             tag
         });
     } catch (error: unknown) {
