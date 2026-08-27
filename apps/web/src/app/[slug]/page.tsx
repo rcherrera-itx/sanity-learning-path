@@ -3,6 +3,7 @@ import Image from 'next/image';
 import { notFound } from "next/navigation";
 import { draftMode } from "next/headers";
 import { Suspense } from "react";
+import { PortableText } from "next-sanity";
 
 import { urlFor } from '@/sanity/lib/image';
 import { pageBySlugQuery, pageSlugsQuery } from "@/sanity/lib/queries";
@@ -23,7 +24,7 @@ export async function generateStaticParams() {
         query: pageSlugsQuery,
     });
 
-    // console.log('[BUILD-RUNTIME]', { data });
+    console.log('[BUILD-RUNTIME]', { data });
 
     return data;
 }
@@ -50,6 +51,12 @@ async function CachedContentPage({
         <main>
             <article>
                 <h1>{page.title}</h1>
+
+                {page.content?.length ? (
+                    <section>
+                        <PortableText value={page.content} />
+                    </section>
+                ) : null}
 
                 {page.featuredProducts?.length ? (
                     <section>
