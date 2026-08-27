@@ -29,6 +29,8 @@ export async function generateStaticParams() {
         query: productSlugsQuery
     })
 
+    console.log('[BUILD-RUNTIME]', { data });
+
     return data;
 }
 
@@ -37,8 +39,9 @@ async function CachedProductPage({
     perspective,
     stega
 }: CachedProductPageProps) {
-
     "use cache";
+
+    console.log('[THREE-LAYER][3 CACHED]', { slug, perspective, stega });
 
     const { data: product } = await sanityFetch({
         query: productBySlugQuery,
@@ -113,6 +116,8 @@ async function DynamicProductPage({
         getDynamicFetchOptions()
     ]);
 
+    console.log('[THREE-LAYER][2 DYNAMIC]', { slug, perspective, stega });
+
     return (
         <CachedProductPage slug={slug} perspective={perspective} stega={stega} />
     );
@@ -120,6 +125,8 @@ async function DynamicProductPage({
 
 export default async function ProductPage({ params }: ProductPageProps) {
     const { isEnabled: isDraftMode } = await draftMode();
+
+    console.log('[THREE-LAYER][1 ORCHESTRATOR]', { isDraftMode });
 
     if (isDraftMode) {
         return (

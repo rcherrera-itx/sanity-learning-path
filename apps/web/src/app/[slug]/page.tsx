@@ -23,6 +23,8 @@ export async function generateStaticParams() {
         query: pageSlugsQuery,
     });
 
+    console.log('[BUILD-RUNTIME]', { data });
+
     return data;
 }
 
@@ -30,6 +32,8 @@ async function CachedContentPage({
     slug, perspective, stega
 }: CachedContentPageProps) {
     "use cache";
+
+    console.log('[THREE-LAYER][3 CACHED]', { slug, perspective, stega });
 
     const { data: page } = await sanityFetch({
         query: pageBySlugQuery,
@@ -99,13 +103,17 @@ async function DynamicContentPage({
         getDynamicFetchOptions()
     ]);
 
+    console.log('[THREE-LAYER][2 DYNAMIC]', { slug });
+
     return (
         <CachedContentPage slug={slug} {...dynamicFetchOptions} />
     );
 }
 
 export default async function ContentPage({ params }: ContentPageProps) {
-    const { isEnabled: isDraftMode } = await draftMode()
+    const { isEnabled: isDraftMode } = await draftMode();
+
+    console.log('[THREE-LAYER][1 ORCHESTRATOR]', { isDraftMode });
 
     if (isDraftMode) {
         return (
