@@ -47,12 +47,12 @@ async function CachedContentPage({
             <article>
                 <h1>{page.title}</h1>
 
-                {page.content?.length ? (
+                {page.featuredProducts?.length ? (
                     <section>
                         <h2>Featured Products</h2>
 
                         <ul>
-                            {page.featuredProducts?.map((product) => {
+                            {page.featuredProducts.map((product) => {
                                 if (!product?.slug) {
                                     return null;
                                 }
