@@ -5,7 +5,7 @@ import { draftMode } from "next/headers";
 import { Suspense } from "react";
 
 import { urlFor } from '@/sanity/lib/image';
-import { pageBySlugQuery, productSlugsQuery } from "@/sanity/lib/queries";
+import { pageBySlugQuery, pageSlugsQuery } from "@/sanity/lib/queries";
 import { getDynamicFetchOptions, sanityFetch, sanityFetchStaticParams, type DynamicFetchOptions } from "@/sanity/lib/live";
 
 type ContentPageProps = {
@@ -20,10 +20,7 @@ type CachedContentPageProps =
 
 export async function generateStaticParams() {
     const { data } = await sanityFetchStaticParams({
-        query: productSlugsQuery,
-        params: {
-            type: 'page'
-        }
+        query: pageSlugsQuery,
     });
 
     return data;
