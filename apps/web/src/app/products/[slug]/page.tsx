@@ -7,6 +7,7 @@ import { Suspense } from "react";
 
 import { productBySlugQuery, productSlugsQuery } from "@/sanity/lib/queries";
 import { urlFor } from '@/sanity/lib/image';
+import { SANITY_WEBHOOK_CACHE_TAGS } from "@/sanity/lib/cache-tags";
 import {
     getDynamicFetchOptions,
     sanityFetch,
@@ -47,7 +48,10 @@ async function CachedProductPage({
         query: productBySlugQuery,
         params: { slug },
         perspective,
-        stega
+        stega,
+        tags: [
+            SANITY_WEBHOOK_CACHE_TAGS.product
+        ]
     });
 
     if (!product) {

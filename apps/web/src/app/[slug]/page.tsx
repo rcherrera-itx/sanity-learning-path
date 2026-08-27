@@ -7,7 +7,14 @@ import { PortableText } from "next-sanity";
 
 import { urlFor } from '@/sanity/lib/image';
 import { pageBySlugQuery, pageSlugsQuery } from "@/sanity/lib/queries";
-import { getDynamicFetchOptions, sanityFetch, sanityFetchStaticParams, type DynamicFetchOptions } from "@/sanity/lib/live";
+import { SANITY_WEBHOOK_CACHE_TAGS } from "@/sanity/lib/cache-tags";
+import {
+    getDynamicFetchOptions,
+    sanityFetch,
+    sanityFetchStaticParams,
+    type DynamicFetchOptions
+} from "@/sanity/lib/live";
+
 
 type ContentPageProps = {
     params: Promise<{
@@ -40,7 +47,11 @@ async function CachedContentPage({
         query: pageBySlugQuery,
         params: { slug },
         perspective,
-        stega
+        stega,
+        tags: [
+            SANITY_WEBHOOK_CACHE_TAGS.page,
+            SANITY_WEBHOOK_CACHE_TAGS.product
+        ]
     });
 
     if (!page) {
