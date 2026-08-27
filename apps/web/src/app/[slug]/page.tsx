@@ -23,7 +23,7 @@ export async function generateStaticParams() {
         query: pageSlugsQuery,
     });
 
-    console.log('[BUILD-RUNTIME]', { data });
+    // console.log('[BUILD-RUNTIME]', { data });
 
     return data;
 }
