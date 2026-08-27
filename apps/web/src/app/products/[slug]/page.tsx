@@ -14,13 +14,6 @@ import {
     type DynamicFetchOptions
 } from "@/sanity/lib/live";
 
-export async function generateStatucParams() {
-    const { data } = await sanityFetchStaticParams({
-        query: productSlugsQuery,
-    });
-    return { data };
-}
-
 type ProductPageProps = {
     params: Promise<{
         slug: string
@@ -31,11 +24,13 @@ type CachedProductPageProps =
     Awaited<ProductPageProps["params"]> &
     DynamicFetchOptions;
 
-    export async function generateStaticParams() {
-        const { data } = await sanityFetchStaticParams({
-            query: productSlugsQuery
-        })
-    }
+export async function generateStaticParams() {
+    const { data } = await sanityFetchStaticParams({
+        query: productSlugsQuery
+    })
+
+    return data;
+}
 
 async function CachedProductPage({
     slug,
@@ -119,7 +114,7 @@ async function DynamicProductPage({
     ]);
 
     return (
-        <CachedProductPage slug={slug} perspective="published" stega={false} />
+        <CachedProductPage slug={slug} perspective={perspective} stega={stega} />
     );
 }
 
