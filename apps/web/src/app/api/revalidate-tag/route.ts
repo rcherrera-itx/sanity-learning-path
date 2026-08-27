@@ -37,8 +37,17 @@ export async function POST(request: NextRequest) {
         }
 
         if (!body?._type || !isSanityDocumentType(body._type)) {
+
+            const receivedKeys = body ? Object.keys(body) : [];
+
+            console.warn('[WEBHOOK][UNSUPPORTED-DOCUMENT-TYPES]', {
+                documentId: body?._id,
+                documentType: body?._type,
+                receivedKeys
+            });
+
             return NextResponse.json(
-                { message: 'Unsopported Sanity document type.' },
+                { message: 'Unsopported Sanity document type.', documentId: body?._id ?? null, documentType: body?._type ?? null, receivedKeys, supportedDocumentTypes: Object.keys(SANITY_WEBHOOK_CACHE_TAGS)},
                 { status: 400 }
             )
         }
