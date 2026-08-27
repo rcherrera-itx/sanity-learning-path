@@ -60,7 +60,7 @@ export type Store = {
   _type: "store";
   gid?: string;
   handle?: string;
-  Status?: string;
+  status?: string;
   updatedAt?: string;
 };
 
@@ -349,11 +349,19 @@ export type PageBySlugQueryResult = {
   }> | null;
 } | null;
 
+// Source: src/sanity/lib/queries.ts
+// Variable: productSlugsQuery
+// Query: *[        _type == "product"        &&        defined(slug.current)    ]{        "slug": slug.current        }
+export type ProductSlugsQueryResult = Array<{
+  slug: string;
+}>;
+
 // Query TypeMap
 import "@sanity/client";
 declare module "@sanity/client" {
   interface SanityQueries {
     '\n    *[\n        _type == \'product\'\n        &&\n        slug.current == $slug\n    ]\n    | order(_updatedAt)\n    [0] \n    {\n        _id,\n        title,\n        "slug": slug.current,\n        excerpt,\n        content,\n        images,\n        store,\n\n        relatedProducts[]->{\n            _id,\n            title,\n            "slug": slug.current,\n            excerpt,\n            images\n        }\n    }\n': ProductBySlugQueryResult;
     '\n    *[\n        _type == \'page\'\n        &&\n        slug.current == $slug\n    ]\n    | order(_updatedAt)\n    [0] \n    {\n        _id,\n        title,\n        "slug": slug.current,\n        content,\n\n        featuredProducts[]->{\n            _id,\n            title,\n            "slug": slug.current,\n            excerpt,\n            "image": images[0]\n        }\n    }\n': PageBySlugQueryResult;
+    '\n    *[\n        _type == "product"\n        &&\n        defined(slug.current)\n    ]{\n        "slug": slug.current    \n    }\n': ProductSlugsQueryResult;
   }
 }

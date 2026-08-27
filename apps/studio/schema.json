@@ -331,7 +331,7 @@
           },
           "optional": true
         },
-        "Status": {
+        "status": {
           "type": "objectAttribute",
           "value": {
             "type": "string"
