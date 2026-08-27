@@ -10,7 +10,7 @@ const mainDocuments = defineDocuments([
         filter: '_type == "product" && slug.current == $slug',
     },
     {
-        route: ':/slug',
+        route: '/:slug',
         filter: '_type == "page" && slug.current == $slug',
     }
 ])
