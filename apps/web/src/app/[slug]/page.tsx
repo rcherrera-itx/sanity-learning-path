@@ -87,7 +87,7 @@ async function CachedContentPage({
                                                 alt={product.title}
                                                 width={600}
                                                 height={400}
-                                                quality={75}
+                                                quality={90}
                                                 sizes="(max-width: 768px) 100vw 600px"
                                                 loading="eager"
                                             />
