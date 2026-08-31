@@ -115,7 +115,7 @@ export async function getProductByHandle(
     const resolvedVersion = headers?.get('x-shopify-api-version')?.toString();
 
     if (!resolvedVersion) {
-        throw new Error(`Shopify did not return a X-Shopify-API-Version.`);
+        throw new Error(`Shopify did not return the X-Shopify-API-Version.`);
     }
 
     if (resolvedVersion !== requestedVersion) {
@@ -128,4 +128,4 @@ export async function getProductByHandle(
     }
 
     return data.product;
-};
+}
