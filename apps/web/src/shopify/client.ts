@@ -15,3 +15,7 @@ export const storefrontClient = createStorefrontApiClient({
     clientName: 'sanity-commerce-study',
     retries: 1
 });
+
+export function getConfigShopifyApiVersion() {
+    return shopifyConfig.apiVersion;
+}
