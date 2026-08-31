@@ -11,3 +11,9 @@ export function isSanityDocumentType(value: string): value is SanityDocumentType
         value
     );
 }
+
+export function getSanityProductCacheTag(
+    handle: string
+): string {
+    return `sanity:product:${handle}`;
+}
