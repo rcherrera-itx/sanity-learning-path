@@ -1,6 +1,5 @@
 import { NextResponse } from 'next/server';
 import { getProductByHandle } from '@/shopify/queries/product';
-import { getProductEditorialByHandle } from '@/sanity/lib/product-editorial';
 
 type ShopifyProductRouteContext = {
     params: Promise<{
@@ -14,8 +13,7 @@ export async function GET(
 ) {
     try {
         const { handle } = await params;
-        // const product = await getProductByHandle(handle);
-        const product = await getProductEditorialByHandle(handle);
+        const product = await getProductByHandle(handle);
 
         if (!product) {
             return NextResponse.json(
