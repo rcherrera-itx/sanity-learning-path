@@ -13,5 +13,5 @@ function requireEnvironmentVariable(name: string): string {
 export const shopifyConfig = {
     storeDomain: requireEnvironmentVariable('SHOPIFY_STORE_DOMAIN'),
     apiVersion: "2026-07",
-    privateAccessToken: requireEnvironmentVariable('SHOPIFY_STOREFRONT_PRIVATE_ACCESS_TOKEN')
+    privateAccessToken: requireEnvironmentVariable('SHOPIFY_STOREFRONT_ACCESS_TOKEN')
 } as const;
