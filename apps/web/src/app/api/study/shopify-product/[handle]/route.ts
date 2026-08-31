@@ -32,7 +32,7 @@ export async function GET(
         );
     } catch (error: unknown) {
         const message = error instanceof Error
-            ? error.message : "Unkown message";
+            ? error.message : "Unknown message";
 
         console.error("[SHOPIFY][PRODUCT_BY_HANDLE]", { message });
 

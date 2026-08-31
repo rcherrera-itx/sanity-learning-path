@@ -50,7 +50,7 @@ export type StorefrontProduct = {
     };
 };
 
-type StorefrontVariant = {
+export type StorefrontVariant = {
     id: string;
     title: string;
     sku: string | null;
@@ -103,7 +103,7 @@ export async function getProductByHandle(
 
     if (errors) {
         const messages = errors.graphQLErrors?.map((error) => error.message).join(" | ");
-        const status = errors.networkStatusCode ? `HTTP ${errors.networkStatusCode}` : "HTTP status unavailable.";
+        const status = errors.networkStatusCode ? `HTTP ${errors.networkStatusCode}` : "HTTP status unavailable";
 
         throw new Error(
             `[SHOPIFY][PRODUCT_BY_HANDLE] ${status}: ` +
@@ -115,13 +115,15 @@ export async function getProductByHandle(
     const resolvedVersion = headers?.get('x-shopify-api-version')?.toString();
 
     if (!resolvedVersion) {
-        throw new Error(`Shopify did not return the X-Shopify-API-Version.`);
+        throw new Error(`Shopify did not return the X-Shopify-API-Version header.`);
     }
 
     if (resolvedVersion !== requestedVersion) {
         throw new Error(`Shopify API version mismatch: requested ${requestedVersion}, ` +
             `resolved ${resolvedVersion}.`);
     }
+
+    console.log("[SHOPIFY][PRODUCT_BY_HANDLE][API_VERSION]", { requestedVersion, resolvedVersion });
 
     if (!data) {
         throw new Error("Shopify returned an empty ProductByHandle response");
