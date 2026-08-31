@@ -70,3 +70,21 @@ export const pageSlugsQuery = defineQuery(`
         "slug": slug.current    
     }
 `);
+
+export const productEditorialByHandleQuery = defineQuery(`
+    *[
+        _type == "product"
+        &&
+        slug.current == $handle
+    ]
+    | order(_updated_at desc)
+    [0]
+    {
+        _id,
+        "handle": slug.current,
+        "editorialTitle": title,
+        excerpt,
+        content,
+        "editorialImage": images[0]
+    }
+`);

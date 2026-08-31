@@ -363,6 +363,47 @@ export type PageSlugsQueryResult = Array<{
   slug: string;
 }>;
 
+// Source: src/sanity/lib/queries.ts
+// Variable: productEditorialByHandleQuery
+// Query: *[        _type == "product"        &&        slug.current == $handle    ]    | order(_updated_at desc)    [0]    {        _id,        "handle": slug.current,        "editorialTitle": title,        excerpt,        content,        "editorialImage": images[0]    }
+export type ProductEditorialByHandleQueryResult = {
+  _id: string;
+  handle: string;
+  editorialTitle: string;
+  excerpt: string | null;
+  content: Array<{
+    children?: Array<{
+      marks?: Array<string>;
+      text?: string;
+      _type: "span";
+      _key: string;
+    }>;
+    style?: "blockquote" | "h1" | "h2" | "h3" | "h4" | "h5" | "h6" | "normal";
+    listItem?: "bullet" | "number";
+    markDefs?: Array<{
+      href?: string;
+      _type: "link";
+      _key: string;
+    }>;
+    level?: number;
+    _type: "block";
+    _key: string;
+  }> | null;
+  editorialImage: {
+    asset?: {
+      _ref: string;
+      _type: "reference";
+      _weak?: boolean;
+      [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+    };
+    media?: unknown;
+    hotspot?: SanityImageHotspot;
+    crop?: SanityImageCrop;
+    _type: "image";
+    _key: string;
+  } | null;
+} | null;
+
 // Query TypeMap
 import "@sanity/client";
 declare module "@sanity/client" {
@@ -371,5 +412,6 @@ declare module "@sanity/client" {
     '\n    *[\n        _type == \'page\'\n        &&\n        slug.current == $slug\n    ]\n    | order(_updatedAt)\n    [0] \n    {\n        _id,\n        title,\n        "slug": slug.current,\n        content,\n\n        featuredProducts[]->{\n            _id,\n            title,\n            "slug": slug.current,\n            excerpt,\n            "image": images[0]\n        }\n    }\n': PageBySlugQueryResult;
     '\n    *[\n        _type == "product"\n        &&\n        defined(slug.current)\n    ]{\n        "slug": slug.current    \n    }\n': ProductSlugsQueryResult;
     '\n    *[\n        _type == "page"\n        &&\n        defined(slug.current)\n    ]{\n        "slug": slug.current    \n    }\n': PageSlugsQueryResult;
+    '\n    *[\n        _type == "product"\n        &&\n        slug.current == $handle\n    ]\n    | order(_updated_at desc)\n    [0]\n    {\n        _id,\n        "handle": slug.current,\n        "editorialTitle": title,\n        excerpt,\n        content,\n        "editorialImage": images[0]\n    }\n': ProductEditorialByHandleQueryResult;
   }
 }
