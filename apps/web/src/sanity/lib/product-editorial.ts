@@ -1,7 +1,7 @@
 import "server-only";
 import { sanityFetch } from "./live";
 import { productEditorialByHandleQuery } from "./queries";
-import { ProductEditorialByHandleQueryResult } from '../types';
+import type { ProductEditorialByHandleQueryResult } from '../types';
 import { getSanityProductCacheTag } from "./cache-tags";
 
 export async function getProductEditorialByHandle(
@@ -9,7 +9,7 @@ export async function getProductEditorialByHandle(
 ): Promise<ProductEditorialByHandleQueryResult> {
     "use cache";
 
-    const { data: data } = await sanityFetch({
+    const { data } = await sanityFetch({
         query: productEditorialByHandleQuery,
         params: { handle },
         perspective: "published",
