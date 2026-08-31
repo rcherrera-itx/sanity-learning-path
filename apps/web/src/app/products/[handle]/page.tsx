@@ -3,10 +3,12 @@ import { Suspense } from "react";
 import { PortableText } from "next-sanity";
 import Image from "next/image";
 import { urlFor } from "@/sanity/lib/image";
+import Link from "next/link";
 
 import { getProductByHandle, StorefrontProduct } from "@/shopify/queries/product";
 import { getProductEditorialByHandle } from "@/sanity/lib/product-editorial";
 import { ProductEditorialByHandleQueryResult } from "@/sanity/types";
+import { AddToCartForm } from "@/app/components/add-to-cart-form";
 
 type ContentPageProps = {
     params: Promise<{
@@ -108,6 +110,9 @@ async function ProductComposition({
                                 loading="eager"
                             />
                         ) : null}
+
+                        <AddToCartForm variants={product.variants.nodes} />
+                        <Link href="/cart">View cart</Link>
                     </section>
                 ) : (
                     <section>
