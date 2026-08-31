@@ -4,8 +4,9 @@ import { PortableText } from "next-sanity";
 import Image from "next/image";
 import { urlFor } from "@/sanity/lib/image";
 
-import { getProductByHandle } from "@/shopify/queries/product";
+import { getProductByHandle, StorefrontProduct } from "@/shopify/queries/product";
 import { getProductEditorialByHandle } from "@/sanity/lib/product-editorial";
+import { ProductEditorialByHandleQueryResult } from "@/sanity/types";
 
 type ContentPageProps = {
     params: Promise<{
@@ -13,19 +14,42 @@ type ContentPageProps = {
     }>
 }
 
+async function getEditorialProduct(handle: string): Promise<ProductEditorialByHandleQueryResult> {
+    try {
+        return await getProductEditorialByHandle(handle);
+    } catch (error) {
+        console.error("[SHOPIFY][PRODUCT_BY_HANDLE][DEGRADED]", {
+            handle,
+            message: error instanceof Error ? error.message : "Unknown error"
+        });
+
+        return null;
+    }
+}
+
 async function ProductComposition({
     params
 }: ContentPageProps) {
     const { handle } = await params;
 
-    const [product, editorial] = await Promise.all([
-        getProductByHandle(handle),
-        getProductEditorialByHandle(handle)
-    ])
+    let product: StorefrontProduct | null;
+
+    try {
+        product = await getProductByHandle(handle);
+    } catch (error) {
+        console.error("[SHOPIFY][PRODUCT_BY_HANDLE]FAILED]", {
+            handle,
+            message: error instanceof Error ? error.message : "Unknown error"
+        });
+
+        throw new Error('Product Source Unavailable');
+    }
 
     if (!product) {
         notFound();
     }
+
+    const editorial = await getEditorialProduct(handle);
 
     return (
         <main>
