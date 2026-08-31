@@ -77,7 +77,7 @@ export const productEditorialByHandleQuery = defineQuery(`
         &&
         slug.current == $handle
     ]
-    | order(_updated_at desc)
+    | order(_updatedAt desc)
     [0]
     {
         _id,
