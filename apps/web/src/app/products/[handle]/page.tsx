@@ -18,7 +18,7 @@ async function getEditorialProduct(handle: string): Promise<ProductEditorialByHa
     try {
         return await getProductEditorialByHandle(handle);
     } catch (error) {
-        console.error("[SHOPIFY][PRODUCT_BY_HANDLE][DEGRADED]", {
+        console.error("[SANITY][PRODUCT_BY_HANDLE][DEGRADED]", {
             handle,
             message: error instanceof Error ? error.message : "Unknown error"
         });
