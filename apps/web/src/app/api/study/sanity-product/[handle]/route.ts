@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import { getProductEditorialByHandle } from '@/sanity/lib/product-editorial';
 
-type ShopifyProductRouteContext = {
+type SanityProductRouteContext = {
     params: Promise<{
         handle: string
     }>;
@@ -9,13 +9,13 @@ type ShopifyProductRouteContext = {
 
 export async function GET(
     _request: Request,
-    { params }: ShopifyProductRouteContext
+    { params }: SanityProductRouteContext
 ) {
     try {
         const { handle } = await params;
-        const producteditorial = await getProductEditorialByHandle(handle);
+        const editorial = await getProductEditorialByHandle(handle);
 
-        if (!producteditorial) {
+        if (!editorial) {
             return NextResponse.json(
                 {
                     message: "Sanity product editorial not found!",
@@ -27,14 +27,14 @@ export async function GET(
         }
 
         return NextResponse.json(
-            { producteditorial },
+            { editorial },
             { status: 200 }
         );
     } catch (error: unknown) {
         const message = error instanceof Error
             ? error.message : "Unknown message";
 
-        console.error("[SANITY][PRODUCT_BY_HANDLE]", { message });
+        console.error("[SANITY][PRODUCT_EDITORIAL_BY_HANDLE]", { message });
 
         return NextResponse.json(
             {
