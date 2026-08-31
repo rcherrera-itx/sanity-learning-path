@@ -87,6 +87,9 @@ async function ProductComposition({
                     />
                 ) : null}
 
+                <AddToCartForm variants={product.variants.nodes} />
+                <Link href="/cart">View cart</Link>
+
                 {editorial ? (
                     <section>
                         <h2>{editorial.editorialTitle}</h2>
@@ -110,9 +113,6 @@ async function ProductComposition({
                                 loading="eager"
                             />
                         ) : null}
-
-                        <AddToCartForm variants={product.variants.nodes} />
-                        <Link href="/cart">View cart</Link>
                     </section>
                 ) : (
                     <section>
