@@ -1,6 +1,8 @@
 import { notFound } from "next/navigation";
 import { Suspense } from "react";
 import { PortableText } from "next-sanity";
+import Image from "next/image";
+import { urlFor } from "@/sanity/lib/image";
 
 import { getProductByHandle } from "@/shopify/queries/product";
 import { getProductEditorialByHandle } from "@/sanity/lib/product-editorial";
@@ -48,6 +50,17 @@ async function ProductComposition({
                     </div>
                 </dl>
 
+                {product.featuredImage ? (
+                    <Image
+                        src={product.featuredImage.url}
+                        alt={product.featuredImage.altText ?? product.title}
+                        width={product.featuredImage.width ?? 1200}
+                        height={product.featuredImage.height ?? 1200}
+                        sizes="(max-width: 768px) 100vw 1200px"
+                        loading="eager"
+                    />
+                ) : null}
+
                 {editorial ? (
                     <section>
                         <h2>{editorial.editorialTitle}</h2>
@@ -59,6 +72,17 @@ async function ProductComposition({
                             <section>
                                 <PortableText value={editorial.content} />
                             </section>
+                        ) : null}
+
+                        {editorial?.editorialImage?.asset ? (
+                            <Image
+                                src={urlFor(editorial.editorialImage).width(1200).height(800).fit('crop').auto('format').url()}
+                                alt={editorial.editorialTitle}
+                                width={1200}
+                                height={800}
+                                sizes="(max-width: 768px) 100vw 1200px"
+                                loading="eager"
+                            />
                         ) : null}
                     </section>
                 ) : (
