@@ -44,31 +44,32 @@ export type StorefrontProduct = {
     handle: string;
     description: string;
     availableForSale: boolean;
-    featuredImage: StorfrontImage | null;
+    featuredImage: StorefrontImage | null;
     variants: {
-        nodes: storefrontVariant[];
-    } | null;
+        nodes: StorefrontVariant[];
+    };
 };
-type storefrontVariant = {
+
+type StorefrontVariant = {
     id: string;
     title: string;
     sku: string | null;
     availableForSale: boolean;
-    price: Price;
-    selectedOptions: Array<SelectedOptions>;
+    price: Money;
+    selectedOptions: SelectedOption[];
 }
 
-type SelectedOptions = {
+type SelectedOption = {
     name: string;
     value: string;
 }
 
-type Price = {
+type Money = {
     amount: string;
     currencyCode: string;
 };
 
-type StorfrontImage = {
+type StorefrontImage = {
     url: string;
     altText: string | null;
     width: number | null;
@@ -87,19 +88,29 @@ export async function getProductByHandle(
     handle: string,
 ): Promise<StorefrontProduct | null> {
     const buyerIpHeaders = await getBuyerIpHeaders();
+    const variables: ProductByHandleVariables = {
+        handle
+    };
+
+
     const { data, errors, headers } = await storefrontClient.request<ProductByHandleData>(
         PRODUCT_BY_HANDLE_QUERY,
         {
-            variables: {
-                handle: handle
-            },
+            // variables: variables,
+            variables,
             headers: buyerIpHeaders
         }
     );
 
-    const variables: ProductByHandleVariables = {
-        handle
-    };
+    if (errors) {
+        const messages = errors.graphQLErrors?.map((error) => error.message).join(" | ");
+        const status = errors.networkStatusCode ? `HTTP ${errors.networkStatusCode}.` : "HTTP status unavailable."
+
+        throw new Error(
+            `[SHOPIFY][PRODUCT_BY_HANDLE] ${status}: ` +
+            (messages || errors.message)
+        );
+    }
 
     const requestedVersion = shopifyConfig.apiVersion;
     const resolvedVersion = headers?.get('x-shopify-api-version')?.toString();
@@ -108,20 +119,9 @@ export async function getProductByHandle(
         throw new Error(`Shopify did not retun a X-Shopify-API-Version.`);
     }
 
-    if (requestedVersion !== resolvedVersion) {
+    if (resolvedVersion !== requestedVersion) {
         throw new Error(`Shopify API version mismatch: requested ${requestedVersion}, ` +
             `resolved. ${resolvedVersion}.`);
-    }
-
-    if (errors) {
-        const messages = errors.graphQLErrors?.map((error) => error.message).join(" | ");
-        throw new Error(
-            messages ?? errors.message ?? "Shopify getProductByHandle query failed."
-        );
-    }
-
-    if (!data?.product) {
-        throw new Error(`Shopify product not found: ${handle}`);
     }
 
     if (!data) {
