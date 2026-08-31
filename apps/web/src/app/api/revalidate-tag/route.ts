@@ -4,12 +4,14 @@ import { parseBody } from 'next-sanity/webhook';
 
 import {
     isSanityDocumentType,
-    SANITY_WEBHOOK_CACHE_TAGS
+    SANITY_WEBHOOK_CACHE_TAGS,
+    getSanityProductCacheTag
 } from '@/sanity/lib/cache-tags';
 
 type SanityWebhookPayload = {
     _id?: string;
     _type?: string;
+    handle?: string;
 }
 
 export async function POST(request: NextRequest) {
@@ -47,25 +49,41 @@ export async function POST(request: NextRequest) {
             });
 
             return NextResponse.json(
-                { message: 'Unsopported Sanity document type.', documentId: body?._id ?? null, documentType: body?._type ?? null, receivedKeys, supportedDocumentTypes: Object.keys(SANITY_WEBHOOK_CACHE_TAGS)},
+                { message: 'Unsopported Sanity document type.', documentId: body?._id ?? null, documentType: body?._type ?? null, receivedKeys, supportedDocumentTypes: Object.keys(SANITY_WEBHOOK_CACHE_TAGS) },
                 { status: 400 }
             )
         }
 
-        const tag = SANITY_WEBHOOK_CACHE_TAGS[body._type];
+        const invalidatedTags: string[] = [];
+        const genericTag = SANITY_WEBHOOK_CACHE_TAGS[body._type];
 
-        revalidateTag(tag, { expire: 0 });
+        revalidateTag(genericTag, 'max');
+        invalidatedTags.push(genericTag);
+
+        if (body._type === 'product') {
+            if (!body.handle) {
+                console.warn('[WEBHOOK][REVALIDATE-TAG][MISSING_HANDLE]', {
+                    documentId: body._id,
+                    documentType: body._type
+                });
+            } else {
+                const productTag = getSanityProductCacheTag(body.handle);
+                revalidateTag(productTag, 'max');
+                invalidatedTags.push(productTag);
+            }
+        }
 
         console.log('[WEBHOOK][REVALIDATE-TAG]', {
             documentId: body._id,
-            documentType: body._type
+            documentType: body._type,
+            invalidatedTags
         });
 
         return NextResponse.json({
             revalidated: true,
             documentId: body._id,
             documentType: body._type,
-            tag
+            invalidatedTags
         });
     } catch (error: unknown) {
         console.error('[WEBHOOK][ERROR]', { error });
