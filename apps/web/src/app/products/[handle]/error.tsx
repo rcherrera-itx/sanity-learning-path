@@ -8,7 +8,7 @@ export default function ProductError({
 }) {
     return(
         <main>
-            <h1>We couldn&apost load this product right now.</h1>
+            <h1>We couldn&apost;t load this product right now.</h1>
             <p>The commercial data source is temporarily unavailabe.</p>
             <button onClick={() => reset()}>Try again.</button>
         </main>
