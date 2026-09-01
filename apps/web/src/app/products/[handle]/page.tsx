@@ -5,9 +5,9 @@ import Image from "next/image";
 import { urlFor } from "@/sanity/lib/image";
 import Link from "next/link";
 
-import { getProductByHandle, StorefrontProduct } from "@/shopify/queries/product";
+import { getProductByHandle, type StorefrontProduct } from "@/shopify/queries/product";
 import { getProductEditorialByHandle } from "@/sanity/lib/product-editorial";
-import { ProductEditorialByHandleQueryResult } from "@/sanity/types";
+import type { ProductEditorialByHandleQueryResult } from "@/sanity/types";
 import { AddToCartForm } from "@/app/components/add-to-cart-form";
 
 type ContentPageProps = {
@@ -39,7 +39,7 @@ async function ProductComposition({
     try {
         product = await getProductByHandle(handle);
     } catch (error) {
-        console.error("[SHOPIFY][PRODUCT_BY_HANDLE]FAILED]", {
+        console.error("[SHOPIFY][PRODUCT_BY_HANDLE][FAILED]", {
             handle,
             message: error instanceof Error ? error.message : "Unknown error"
         });
@@ -82,7 +82,7 @@ async function ProductComposition({
                         alt={product.featuredImage.altText ?? product.title}
                         width={product.featuredImage.width ?? 1200}
                         height={product.featuredImage.height ?? 1200}
-                        sizes="(max-width: 768px) 100vw 1200px"
+                        sizes="(max-width: 768px) 100vw, 1200px"
                         loading="eager"
                     />
                 ) : null}
@@ -109,7 +109,7 @@ async function ProductComposition({
                                 alt={editorial.editorialTitle}
                                 width={1200}
                                 height={800}
-                                sizes="(max-width: 768px) 100vw 1200px"
+                                sizes="(max-width: 768px) 100vw, 1200px"
                                 loading="eager"
                             />
                         ) : null}

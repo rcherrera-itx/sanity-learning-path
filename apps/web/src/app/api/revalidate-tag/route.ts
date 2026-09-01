@@ -50,7 +50,7 @@ export async function POST(request: NextRequest) {
 
             return NextResponse.json(
                 {
-                    message: 'Unsopported Sanity document type.',
+                    message: 'Unsupported Sanity document type.',
                     documentId: body?._id ?? null,
                     documentType: body?._type ?? null,
                     receivedKeys,
@@ -71,7 +71,7 @@ export async function POST(request: NextRequest) {
 
             return NextResponse.json(
                 {
-                    message: 'Missing Product Handle.',
+                    message: 'Missing product handle.',
                     documentId: body._id ?? null,
                     documentType: body._type
                 },

@@ -26,7 +26,7 @@ const CART_CREATE_MUTATION = `#graphql
                 field
                 message
             }
-        }    
+        }
     }
 `;
 
@@ -74,7 +74,7 @@ const CART_LINES_ADD_MUTATION = `#graphql
                 field
                 message
             }
-        }    
+        }
     }
 `;
 
@@ -331,7 +331,7 @@ const CART_LINES_UPDATE_MUTATION = `#graphql
                 field
                 message
             }
-        }    
+        }
     }
 `;
 
