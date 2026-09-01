@@ -111,6 +111,8 @@ export async function addCartAction(
     _previousState: AddCartState,
     formData: FormData
 ): Promise<AddCartState> {
+    void _previousState;
+    void formData;
     const merchandiseId = formData.get("merchandiseId");
 
     if (
@@ -361,6 +363,8 @@ export async function updateCartLineAction(
     _previousState: UpdateCartLineState,
     formData: FormData
 ): Promise<UpdateCartLineState> {
+    void _previousState;
+    void formData;
     const cartLineId = formData.get('cartLineId');
     const requestedQuantity = formData.get('quantity');
 
@@ -476,6 +480,8 @@ export async function proceedToCheckout(
     _previousState: CheckoutState,
     _formData: FormData
 ): Promise<CheckoutState> {
+    void _previousState;
+    void _formData;
     const cookieStore = await cookies();
     const cartId = cookieStore.get(CART_COOKIE_NAME)?.value;
 
