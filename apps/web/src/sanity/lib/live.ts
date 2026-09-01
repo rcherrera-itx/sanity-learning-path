@@ -8,11 +8,18 @@ import {
 
 import { client } from './client'
 
-const token = process.env.SANITY_API_READ_TOKEN;
+const serverToken = process.env.SANITY_API_READ_TOKEN;
+const browserToken = process.env.SANITY_API_BROWSER_TOKEN;
 
-if (!token) {
+if (!serverToken) {
     throw new Error(
         'Missing environment variable: SANITY_API_READ_TOKEN'
+    )
+}
+
+if (!browserToken) {
+    throw new Error(
+        'Missing environment variable: SANITY_API_BROWSER_TOKEN'
     )
 }
 
@@ -21,8 +28,8 @@ export const {
     SanityLive
 } = defineLive({
     client,
-    serverToken: token,
-    browserToken: token,
+    serverToken: serverToken,
+    browserToken: browserToken,
     strict: true
 });
 
