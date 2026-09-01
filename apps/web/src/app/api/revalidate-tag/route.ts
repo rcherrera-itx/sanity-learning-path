@@ -49,7 +49,32 @@ export async function POST(request: NextRequest) {
             });
 
             return NextResponse.json(
-                { message: 'Unsopported Sanity document type.', documentId: body?._id ?? null, documentType: body?._type ?? null, receivedKeys, supportedDocumentTypes: Object.keys(SANITY_WEBHOOK_CACHE_TAGS) },
+                {
+                    message: 'Unsopported Sanity document type.',
+                    documentId: body?._id ?? null,
+                    documentType: body?._type ?? null,
+                    receivedKeys,
+                    supportedDocumentTypes: Object.keys(SANITY_WEBHOOK_CACHE_TAGS)
+                },
+                { status: 400 }
+            )
+        }
+
+        const productHandle = body._type === 'product'
+            ? body.handle?.trim() : undefined;
+
+        if (body._type === 'product' && !productHandle) {
+            console.warn('[WEBHOOK][REVALIDATE-TAG][MISSING_HANDLE]', {
+                documentId: body._id,
+                documentType: body._type
+            });
+
+            return NextResponse.json(
+                {
+                    message: 'Missing Product Handle.',
+                    documentId: body._id ?? null,
+                    documentType: body._type
+                },
                 { status: 400 }
             )
         }
@@ -60,17 +85,11 @@ export async function POST(request: NextRequest) {
         revalidateTag(genericTag, 'max');
         invalidatedTags.push(genericTag);
 
-        if (body._type === 'product') {
-            if (!body.handle) {
-                console.warn('[WEBHOOK][REVALIDATE-TAG][MISSING_HANDLE]', {
-                    documentId: body._id,
-                    documentType: body._type
-                });
-            } else {
-                const productTag = getSanityProductCacheTag(body.handle);
-                revalidateTag(productTag, 'max');
-                invalidatedTags.push(productTag);
-            }
+        if (body._type === 'product' && productHandle) {
+            const productTag = getSanityProductCacheTag(productHandle);
+
+            revalidateTag(productTag, 'max');
+            invalidatedTags.push(productTag);
         }
 
         console.log('[WEBHOOK][REVALIDATE-TAG]', {
