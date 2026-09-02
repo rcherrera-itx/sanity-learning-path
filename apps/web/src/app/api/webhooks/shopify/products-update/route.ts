@@ -13,8 +13,6 @@ type ShopifyProductUpdatePayload = {
     handle?: unknown;
 };
 
-export const runtime = 'nodejs';
-
 function normalizeShopDomain(domain: string): string {
     return domain
         .trim()
@@ -98,7 +96,15 @@ export async function POST(request: Request) {
         try {
             parsedBody = JSON.parse(rawBody) as unknown;
         } catch (error: unknown) {
-            console.error("[SHOPIFY][WEBHOOK][PAYLOAD]");
+
+            const message = error instanceof Error
+                ? error.message
+                : "unknown";
+
+            console.error(
+                "[SHOPIFY][WEBHOOK][PAYLOAD]",
+                message
+            );
 
             return NextResponse.json(
                 { message: "Invalid Shopify webhook payload." },
@@ -131,7 +137,7 @@ export async function POST(request: Request) {
         const invalidateTag = getShopifyProductCacheTag(handle);
         revalidateTag(invalidateTag, 'max');
 
-        console.error("[SHOPIFY][WEBHOOK][PRODUCTS_UPDATE]", {
+        console.log("[SHOPIFY][WEBHOOK][PRODUCTS_UPDATE]", {
             webhookId: request.headers.get('x-shopify-webhook-id'),
             productId: body.id,
             handle,
