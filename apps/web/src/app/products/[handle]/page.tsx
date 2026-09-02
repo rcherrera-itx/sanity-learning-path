@@ -9,6 +9,8 @@ import { getProductByHandle, type StorefrontProduct } from "@/shopify/queries/pr
 import { getProductEditorialByHandle } from "@/sanity/lib/product-editorial";
 import type { ProductEditorialByHandleQueryResult } from "@/sanity/types";
 import { AddToCartForm } from "@/app/components/add-to-cart-form";
+import { getCachedProductCatalogByHandle, type StorefrontProductCatalog } from "@/shopify/queries/product-catalog";
+
 
 type ContentPageProps = {
     params: Promise<{
@@ -35,9 +37,13 @@ async function ProductComposition({
     const { handle } = await params;
 
     let product: StorefrontProduct | null;
+    let catalog: StorefrontProductCatalog | null;
 
     try {
-        product = await getProductByHandle(handle);
+        [product, catalog] = await Promise.all([
+            getProductByHandle(handle),
+            getCachedProductCatalogByHandle(handle)
+        ]);
     } catch (error) {
         console.error("[SHOPIFY][PRODUCT_BY_HANDLE][FAILED]", {
             handle,
@@ -47,7 +53,7 @@ async function ProductComposition({
         throw new Error('Product Source Unavailable');
     }
 
-    if (!product) {
+    if (!product || !catalog) {
         notFound();
     }
 
@@ -57,16 +63,16 @@ async function ProductComposition({
         <main>
             <article>
                 <header>
-                    <h1>{product.title}</h1>
+                    <h1>{catalog.title}</h1>
 
-                    {product.description ? (
-                        <p>{product.description}</p>
+                    {catalog.description ? (
+                        <p>{catalog.description}</p>
                     ) : null}
                 </header>
                 <dl>
                     <div>
                         <dt>Handle: </dt>
-                        <dd>{product.handle}</dd>
+                        <dd>{catalog.handle}</dd>
                     </div>
                     <div>
                         <dt>Availability:</dt>
@@ -76,12 +82,12 @@ async function ProductComposition({
                     </div>
                 </dl>
 
-                {product.featuredImage ? (
+                {catalog.featuredImage ? (
                     <Image
-                        src={product.featuredImage.url}
-                        alt={product.featuredImage.altText ?? product.title}
-                        width={product.featuredImage.width ?? 1200}
-                        height={product.featuredImage.height ?? 1200}
+                        src={catalog.featuredImage.url}
+                        alt={catalog.featuredImage.altText ?? catalog.title}
+                        width={catalog.featuredImage.width ?? 1200}
+                        height={catalog.featuredImage.height ?? 1200}
                         sizes="(max-width: 768px) 100vw, 1200px"
                         loading="eager"
                     />
