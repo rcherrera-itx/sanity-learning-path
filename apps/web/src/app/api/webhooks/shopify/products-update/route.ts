@@ -81,7 +81,7 @@ export async function POST(request: Request) {
 
         if (
             !shopDomain
-            || normalizeShopDomain(shopDomain) !== configuredShopDomain
+            || normalizeShopDomain(shopDomain) !== normalizeShopDomain(configuredShopDomain)
         ) {
             console.error("[SHOPIFY][WEBHOOK][UNEXPECTED]");
 
@@ -135,6 +135,7 @@ export async function POST(request: Request) {
         }
 
         const invalidateTag = getShopifyProductCacheTag(handle);
+
         revalidateTag(invalidateTag, 'max');
 
         console.log("[SHOPIFY][WEBHOOK][PRODUCTS_UPDATE]", {
@@ -149,17 +150,11 @@ export async function POST(request: Request) {
             productId: body.id ?? null,
             handle,
             invalidateTag
-        }
-
-        );
+        });
     } catch (error: unknown) {
-        const message = error instanceof Error
-            ? error.message
-            : "unknown";
-
         console.error(
             "[SHOPIFY][PRODUCT_CATALOG_ROUTE]",
-            message
+            { error }
         );
 
         return NextResponse.json(
