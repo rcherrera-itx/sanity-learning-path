@@ -53,7 +53,7 @@ function getStorefrontApiUrl(): string {
 export async function getCachedProductCatalogByHandle(
     handle: string
 ): Promise<StorefrontProductCatalog | null> {
-    "use cache";
+    "use cache: remote";
 
     cacheLife("hours");
     cacheTag(getShopifyProductCacheTag(handle));
@@ -99,7 +99,7 @@ export async function getCachedProductCatalogByHandle(
 
     if (result.errors?.length) {
         throw new Error(
-            `[SHOPIFY][PRODUCT_CATALOG_BY_HANDLE] GraphQL:` +
+            `[SHOPIFY][PRODUCT_CATALOG_BY_HANDLE] GraphQL: ` +
             result.errors.map((error) => error.message).join(" | ")
         );
     }
