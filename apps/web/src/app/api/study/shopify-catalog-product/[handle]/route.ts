@@ -28,7 +28,7 @@ export async function GET(
         return NextResponse.json(
             { probe, catalog },
             {
-                status: 404,
+                status: 200,
                 headers: {
                     "Cache-Control": "no-store"
                 }
@@ -38,6 +38,11 @@ export async function GET(
         const message = error instanceof Error
             ? error.message
             : "unknown";
+
+        console.error(
+            "[SHOPIFY][PRODUCT_CATALOG_ROUTE]",
+            message
+        );
 
         return NextResponse.json(
             { message: "Shopify product catalog request failed!" },
