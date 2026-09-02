@@ -1,6 +1,5 @@
 import "server-only";
 
-import { cacheLife, cacheTag } from "next/cache";
 import { shopifyConfig } from "../config";
 import type { StorefrontImage } from './product';
 import { getShopifyProductCacheTag } from "../cache-tags";
@@ -53,18 +52,13 @@ function getStorefrontApiUrl(): string {
 export async function getCachedProductCatalogByHandle(
     handle: string
 ): Promise<StorefrontProductCatalog | null> {
-    "use cache: remote";
-
-    cacheLife("hours");
-    cacheTag(getShopifyProductCacheTag(handle));
-
-    console.log(
-        "[SHOPIFY][PRODUCT_CATALOG_BY_HANDLE][CACHE_MISS]",
-        { handle }
-    );
-
     const response = await fetch(getStorefrontApiUrl(), {
         method: 'POST',
+        cache: "force-cache",
+        next: {
+            revalidate: 60 * 60,
+            tags: [getShopifyProductCacheTag(handle)]
+        },
         headers: {
             "Content-Type": "application/json",
         },
