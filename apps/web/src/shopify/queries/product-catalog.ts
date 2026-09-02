@@ -61,6 +61,8 @@ export async function getCachedProductCatalogByHandle(
         },
         headers: {
             "Content-Type": "application/json",
+            "Accept": "application/json",
+            "X-Shopify-Storefront-Access-Token": shopifyConfig.publicAccessToken
         },
         body: JSON.stringify({
             query: PRODUCT_CATALOG_BY_HANDLE_QUERY,
@@ -69,8 +71,10 @@ export async function getCachedProductCatalogByHandle(
     });
 
     if (!response.ok) {
+        const responseBody = await response.text();
         throw new Error(
-            `[SHOPIFY][PRODUCT_CATALOG_BY_HANDLE] HTTP ${response.status}`
+            `[SHOPIFY][PRODUCT_CATALOG_BY_HANDLE] HTTP ${response.status}: ` +
+            responseBody.slice(0, 1000)
         );
     }
 
