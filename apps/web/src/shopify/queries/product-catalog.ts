@@ -2,7 +2,7 @@ import "server-only";
 
 import { cacheLife, cacheTag } from "next/cache";
 import { shopifyConfig } from "../config";
-import { StorefrontImage } from './product';
+import type { StorefrontImage } from './product';
 import { getShopifyProductCacheTag } from "../cache-tags";
 
 const PRODUCT_CATALOG_BY_HANDLE_QUERY = `#graphql
@@ -43,7 +43,9 @@ type StorefrontGraphqlResponse<TData> = {
 };
 
 function getStorefrontApiUrl(): string {
-    const storeDomain = shopifyConfig.storeDomain.replace(/^https?:\/\//, "").replace(/\/$/, "");
+    const storeDomain = shopifyConfig.storeDomain
+        .replace(/^https?:\/\//, "")
+        .replace(/\/$/, "");
 
     return `https://${storeDomain}/api/${shopifyConfig.apiVersion}/graphql.json`;
 };
@@ -68,7 +70,7 @@ export async function getCachedProductCatalogByHandle(
         },
         body: JSON.stringify({
             query: PRODUCT_CATALOG_BY_HANDLE_QUERY,
-            variables: handle
+            variables: { handle }
         })
     });
 
@@ -97,14 +99,14 @@ export async function getCachedProductCatalogByHandle(
 
     if (result.errors?.length) {
         throw new Error(
-            `[SHOPIFY][PRODUCT_CATALOG_BY_HANDLE] HTTP ${response.status}` +
-            `resolved ${resolvedVersion}.`
+            `[SHOPIFY][PRODUCT_CATALOG_BY_HANDLE] GraphQL:` +
+            result.errors.map((error) => error.message).join(" | ")
         );
     }
 
     if (!result.data) {
         throw new Error(
-            "Shopify returned an empty ProdctCatalogByHandle response"
+            "Shopify returned an empty ProductCatalogByHandle response"
         );
     }
 

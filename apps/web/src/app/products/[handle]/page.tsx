@@ -45,7 +45,7 @@ async function ProductComposition({
             getCachedProductCatalogByHandle(handle)
         ]);
     } catch (error) {
-        console.error("[SHOPIFY][PRODUCT_BY_HANDLE][FAILED]", {
+        console.error("[SHOPIFY][PRODUCT_COMPOSITION][FAILED]", {
             handle,
             message: error instanceof Error ? error.message : "Unknown error"
         });
