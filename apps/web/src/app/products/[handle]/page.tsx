@@ -1,24 +1,27 @@
-import { notFound } from "next/navigation";
 import { Suspense } from "react";
-import { PortableText } from "next-sanity";
+import { notFound } from "next/navigation";
 import Image from "next/image";
-import { urlFor } from "@/sanity/lib/image";
 import Link from "next/link";
+import { draftMode } from "next/headers";
+import { PortableText } from "next-sanity";
+import { urlFor } from "@/sanity/lib/image";
 
 import { getProductByHandle, type StorefrontProduct } from "@/shopify/queries/product";
 import { getProductEditorialByHandle } from "@/sanity/lib/product-editorial";
 import type { ProductEditorialByHandleQueryResult } from "@/sanity/types";
 import { AddToCartForm } from "@/app/components/add-to-cart-form";
 import { getCachedProductCatalogByHandle, type StorefrontProductCatalog } from "@/shopify/queries/product-catalog";
-import type { DynamicFetchOptions } from "@/sanity/lib/live";
-
-
+import { getDynamicFetchOptions, type DynamicFetchOptions } from "@/sanity/lib/live";
 
 type ContentPageProps = {
     params: Promise<{
         handle: string
     }>
-}
+};
+
+type ProductCompositionProps = ContentPageProps & {
+    fetchOptions: DynamicFetchOptions
+};
 
 async function getEditorialProduct(
     handle: string,
@@ -37,8 +40,9 @@ async function getEditorialProduct(
 }
 
 async function ProductComposition({
-    params
-}: ContentPageProps) {
+    params,
+    fetchOptions
+}: ProductCompositionProps) {
     const { handle } = await params;
 
     let product: StorefrontProduct | null;
@@ -62,10 +66,7 @@ async function ProductComposition({
         notFound();
     }
 
-    const editorial = await getEditorialProduct(handle, {
-        perspective: "published",
-        stega: false
-    });
+    const editorial = await getEditorialProduct(handle, fetchOptions);
 
     return (
         <main>
@@ -138,11 +139,32 @@ async function ProductComposition({
     );
 }
 
+async function DynamicProductComposition({
+    params
+}: ContentPageProps) {
+    const fetchOptions = await getDynamicFetchOptions();
 
-export default function ProductPage({ params }: ContentPageProps) {
+    return(
+        <ProductComposition params={params} fetchOptions={fetchOptions} />
+    );
+};
+
+export default async function ProductPage({ params }: ContentPageProps) {
+    const { isEnabled: isDraftMode } = await draftMode();
+
+    if(isDraftMode) {
+        return(
+            <Suspense fallback={<main>Loading page...</main>}>
+                <DynamicProductComposition params={params} />
+            </Suspense>
+        );
+    }
     return (
         <Suspense fallback={<main>Loading page...</main>}>
-            <ProductComposition params={params} />
+            <ProductComposition params={params} fetchOptions={{
+                perspective: "published",
+                stega: false
+            }} />
         </Suspense>
     );
 }
