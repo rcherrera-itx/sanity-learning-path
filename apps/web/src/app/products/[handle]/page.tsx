@@ -10,6 +10,8 @@ import { getProductEditorialByHandle } from "@/sanity/lib/product-editorial";
 import type { ProductEditorialByHandleQueryResult } from "@/sanity/types";
 import { AddToCartForm } from "@/app/components/add-to-cart-form";
 import { getCachedProductCatalogByHandle, type StorefrontProductCatalog } from "@/shopify/queries/product-catalog";
+import type { DynamicFetchOptions } from "@/sanity/lib/live";
+
 
 
 type ContentPageProps = {
@@ -18,9 +20,12 @@ type ContentPageProps = {
     }>
 }
 
-async function getEditorialProduct(handle: string): Promise<ProductEditorialByHandleQueryResult> {
+async function getEditorialProduct(
+    handle: string,
+    fetchOptions: DynamicFetchOptions
+): Promise<ProductEditorialByHandleQueryResult> {
     try {
-        return await getProductEditorialByHandle(handle);
+        return await getProductEditorialByHandle(handle, fetchOptions);
     } catch (error) {
         console.error("[SANITY][PRODUCT_BY_HANDLE][DEGRADED]", {
             handle,
@@ -57,7 +62,10 @@ async function ProductComposition({
         notFound();
     }
 
-    const editorial = await getEditorialProduct(handle);
+    const editorial = await getEditorialProduct(handle, {
+        perspective: "published",
+        stega: false
+    });
 
     return (
         <main>
