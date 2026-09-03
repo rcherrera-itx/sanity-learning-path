@@ -13,7 +13,10 @@ export async function GET(
 ) {
     try {
         const { handle } = await params;
-        const editorial = await getProductEditorialByHandle(handle);
+        const editorial = await getProductEditorialByHandle(handle, {
+            perspective: "published",
+            stega: false
+        });
 
         if (!editorial) {
             return NextResponse.json(

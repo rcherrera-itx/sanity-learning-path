@@ -153,7 +153,7 @@ export async function POST(request: Request) {
         });
     } catch (error: unknown) {
         console.error(
-            "[SHOPIFY][PRODUCT_CATALOG_ROUTE]",
+            "[SHOPIFY][WEBHOOK][ERROR]",
             { error }
         );
 
